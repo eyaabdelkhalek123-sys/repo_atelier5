@@ -5,6 +5,11 @@ on:
   pull_request:
   push:
     branches: [atelier-03]
+    tags: ['v*']
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   test:
@@ -32,6 +37,7 @@ jobs:
 
   docker-build:
     needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
     steps:
@@ -42,5 +48,5 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: .
-          push: false
-          tags: campus-tasks:ci
+          push: true
+          tags: ghcr.io/eyaabdelkhalek123-sys/campus-tasks:${{ github.ref_name }}
