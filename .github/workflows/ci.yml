@@ -4,7 +4,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [atelier-03]
 
 jobs:
   test:
@@ -13,18 +13,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5        with:
+      - uses: actions/setup-python@v5
+        with:
           python-version: '3.12'
           cache: pip
 
       - run: pip install -r requirements-dev.txt
 
-      - run: pytest -q
+      - name: Exécuter les tests
+        run: pytest -q --junitxml=report.xml
 
       - name: Rapport de tests
-        run: pytest --junitxml=report.xml
-
-      - uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: rapport-tests
